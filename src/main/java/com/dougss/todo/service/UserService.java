@@ -16,9 +16,8 @@ public class UserService {
         this.userRepository = userRepository;
     }
 
-    public UserOutputDTO save(User userParam) {
-        User user = userRepository.save(userParam);
-        return new UserOutputDTO(user);
+    public User save(User userParam) {
+        return userRepository.save(userParam);
     }
 
     public User findByUserName(String username) {
@@ -34,6 +33,6 @@ public class UserService {
 
         String encryptedPassword = new BCryptPasswordEncoder().encode(userInputDTO.getPassword());
         User user = new User(userInputDTO.getUsername(), encryptedPassword);
-        return save(user);
+        return new UserOutputDTO(save(user));
     }
 }
