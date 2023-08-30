@@ -6,6 +6,7 @@ import com.dougss.todo.dto.UserOutputDTO;
 import com.dougss.todo.model.User;
 import com.dougss.todo.service.TokenService;
 import com.dougss.todo.service.UserService;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -38,7 +39,11 @@ public class AuthenticationController {
 
     @PostMapping("/register")
     public ResponseEntity<UserOutputDTO> register(@RequestBody UserInputDTO userInputDTO) {
+
+        // TODO: 28/08/2023 VALID DUPLICATE USER
+    System.out.println("VALID DUPLICATE USER");
+        
         UserOutputDTO userOutputDTO = userService.createNewUser(userInputDTO);
-        return ResponseEntity.ok(userOutputDTO);
+        return new ResponseEntity<>(userOutputDTO, HttpStatus.CREATED);
     }
 }
