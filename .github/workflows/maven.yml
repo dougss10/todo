@@ -10,7 +10,7 @@ jobs:
     container:
       image: convisoappsec/flowcli
       env:
-        FLOW_API_KEY: ${{secrets.CONVISO_API_KEY}}
+        FLOW_API_KEY: vPOnyJHIW_BIwcrQInprVL1QyL0T6dFU12FyRHMhmoI
         FLOW_PROJECT_CODE: 'jd6lgIFwVW1LFNZo'
     steps:
       - name: Checkout code
