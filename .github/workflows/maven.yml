@@ -36,8 +36,8 @@ jobs:
           username: ${{ secrets.DOCKER_HUB_USER }}
           password: ${{ secrets.DOCKER_HUB_PASS }}
 
-
   deploy:
+    needs: build
     name: Setup Gcloud Account
     runs-on: ubuntu-latest
     environment: hw-prod
