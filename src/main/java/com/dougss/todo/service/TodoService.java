@@ -19,8 +19,7 @@ public class TodoService {
     }
 
     public ArrayList<Todo> findAllByUser(User user) {
-        ArrayList<Todo> todos = todoRepository.findAllByUser(user);
-        return todos;
+        return todoRepository.findAllByUser(user);
     }
 
     public Todo save(TodoDTO todoDTO, User user) {
@@ -31,7 +30,7 @@ public class TodoService {
             todo = getTodoById(todoDTO.getId());
         }
 
-        todo.setDescription(todoDTO.getDescription());
+        todo.setDescription(todoDTO.getDescription() + "DEBUG");
         todo.setDone(todoDTO.getDone());
         todo.setUser(user);
 
