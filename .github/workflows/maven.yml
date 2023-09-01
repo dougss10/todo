@@ -63,9 +63,9 @@ jobs:
         run: docker pull $IMAGE_NAME
 
       # build image
-#      - name: Build Docker image
-#        run: docker build -t $IMAGE_NAME .
-#
+      - name: Build Docker image
+        run: docker build --build-arg JWT_SECRET_ARG=${{format('{0}',  secrets.JWT_SECRET )}},DB_HOST_ARG=${{format('{0}',  secrets.DB_HOST)}},DB_USER_ARG=${{format('{0}',  secrets.DB_USER )}},DB_PASS_ARG=${{format('{0}',  secrets.DB_PASS )}} -t $IMAGE_NAME .
+
       # push image to registry
       - name: Push Docker image
         run: docker push $IMAGE_NAME
