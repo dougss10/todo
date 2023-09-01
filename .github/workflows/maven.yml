@@ -51,11 +51,11 @@ jobs:
 
       # build image
       - name: Build Docker image
-        run: docker build --build-arg JWT_SECRET_ARG=${{format('{0}',  secrets.JWT_SECRET )}} --build-arg DB_HOST_ARG=${{format('{0}',  secrets.DB_HOST)}} --build-arg DB_USER_ARG=${{format('{0}',  secrets.DB_USER )}} --build-arg DB_PASS_ARG=${{format('{0}',  secrets.DB_PASS )}} .
+        run: docker build --build-arg JWT_SECRET_ARG=${{format('{0}',  secrets.JWT_SECRET )}} --build-arg DB_HOST_ARG=${{format('{0}',  secrets.DB_HOST)}} --build-arg DB_USER_ARG=${{format('{0}',  secrets.DB_USER )}} --build-arg DB_PASS_ARG=${{format('{0}',  secrets.DB_PASS )}} -t dougss10/todo .
 
       # push image to registry
       - name: Push Docker image
-        run: docker push $IMAGE_NAME
+        run: docker push dougss10/todo
 
       # deploy image
       - name: Deploy Docker image
