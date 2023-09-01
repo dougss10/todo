@@ -36,23 +36,11 @@ jobs:
           username: ${{ secrets.DOCKER_HUB_USER }}
           password: ${{ secrets.DOCKER_HUB_PASS }}
 
-      - uses: actions/upload-artifact@v3
-        with:
-          name: javaDeploy
-          path: target/
-
 #  deploy:
 #    needs: build
       - name: Setup Gcloud Account
-        uses: actions/download-artifact@v3
-        with:
-          name: javaDeploy
-      # Git checkout
-      - name: Checkout
-        uses: actions/checkout@v2
-
       # Login to GCP
-      - uses: google-github-actions/setup-gcloud@v0.2.0
+        uses: google-github-actions/setup-gcloud@v0.2.0
         with:
           service_account_key: ${{ secrets.GCP_CREDENTIALS }}
           project_id: ${{ secrets.GCP_PROJECT_ID }}
