@@ -40,7 +40,7 @@ jobs:
     needs: build
     name: Setup Gcloud Account
     runs-on: ubuntu-latest
-    environment: hw-prod
+    environment: gcp-prod
     env:
       IMAGE_NAME: dougss10/todo
     steps:
