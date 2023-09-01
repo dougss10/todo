@@ -23,7 +23,7 @@ jobs:
           distribution: 'temurin'
           cache: maven
       - name: Build with Maven
-        run: mvn -B package --file pom.xml -Dspring.datasource.url=jdbc:postgresql://${{format('{0}',  secrets.DB_HOST)}}/todo -Dspring.datasource.username=${{format('{0}',  secrets.DB_USER )}} -Dspring.datasource.password=${{format('{0}',  secrets.DB_PASS )}} ${{format('-Dapi.security.token.secret={0}',  secrets.JWT_SECRET )}}
+        run: mvn -B package --file pom.xml -Dspring.datasource.url=jdbc:postgresql://${{format('{0}',  secrets.DB_HOST)}}/todo -Dspring.datasource.username=${{format('{0}',  secrets.DB_USER )}} -Dspring.datasource.password=${{format('{0}',  secrets.DB_PASS )}} -Dapi.security.token.secret=${{format('{0}',  secrets.JWT_SECRET )}}
 
       - name: Build & push Docket image
         uses: mr-smithers-excellent/docker-build-push@v5
@@ -32,5 +32,6 @@ jobs:
           tags: latest
           registry: docker.io
           dockerfile: DockerFile
+          buildArgs: --build-arg "JWT_SECRET_ARG=${{format('{0}',  secrets.JWT_SECRET )}}" --build-arg "DB_HOST_ARG=${{format('{0}',  secrets.DB_HOST)}}" --build-arg "DB_USER_ARG=${{format('{0}',  secrets.DB_USER )}}" --build-arg "DB_PASS_ARG=${{format('{0}',  secrets.DB_PASS )}}" .
           username: ${{ secrets.DOCKER_HUB_USER }}
           password: ${{ secrets.DOCKER_HUB_PASS }}
