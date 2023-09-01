@@ -32,6 +32,6 @@ jobs:
           tags: latest
           registry: docker.io
           dockerfile: Dockerfile
-          buildArgs: JWT_SECRET_ARG=${{format('{0}',  secrets.JWT_SECRET )}} DB_HOST_ARG=${{format('{0}',  secrets.DB_HOST)}} DB_USER_ARG=${{format('{0}',  secrets.DB_USER )}} DB_PASS_ARG=${{format('{0}',  secrets.DB_PASS )}} .
+          buildArgs: JWT_SECRET_ARG=${{format('{0}',  secrets.JWT_SECRET )}} DB_HOST_ARG=${{format('{0}',  secrets.DB_HOST)}} DB_USER_ARG=${{format('{0}',  secrets.DB_USER )}} DB_PASS_ARG=${{format('{0}',  secrets.DB_PASS )}}
           username: ${{ secrets.DOCKER_HUB_USER }}
           password: ${{ secrets.DOCKER_HUB_PASS }}
