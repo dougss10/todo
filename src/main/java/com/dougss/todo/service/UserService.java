@@ -2,6 +2,7 @@ package com.dougss.todo.service;
 
 import com.dougss.todo.dto.UserInputDTO;
 import com.dougss.todo.dto.UserOutputDTO;
+import com.dougss.todo.exception.RegisterException;
 import com.dougss.todo.model.User;
 import com.dougss.todo.repository.UserRepository;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -24,11 +25,10 @@ public class UserService {
         return (User) userRepository.findByUsername(username);
     }
 
-    public UserOutputDTO createNewUser(UserInputDTO userInputDTO) {
+    public UserOutputDTO createNewUser(UserInputDTO userInputDTO) throws RegisterException {
 
         if(findByUserName(userInputDTO.getUsername()) != null) {
-            //TODO valid user already exists
-            System.out.println("Validate here.");
+            throw new RegisterException("User already exists.");
         }
 
         String encryptedPassword = new BCryptPasswordEncoder().encode(userInputDTO.getPassword());
