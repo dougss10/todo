@@ -38,8 +38,6 @@ jobs:
    - uses: actions/checkout@v3
    - name: Run SCA
      run: conviso sca run
-   - name: RUN SAST
-     run: conviso sast run
 
   # conviso-sast:
   #  runs-on: ubuntu-latest
