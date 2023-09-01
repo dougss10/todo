@@ -59,12 +59,12 @@ jobs:
         run: gcloud auth configure-docker --quiet
 
       # build image
-      - name: Build Docker image
-        run: docker build -t $IMAGE_NAME .
-
-      # push image to registry
-      - name: Push Docker image
-        run: docker push $IMAGE_NAME
+#      - name: Build Docker image
+#        run: docker build -t $IMAGE_NAME .
+#
+#      # push image to registry
+#      - name: Push Docker image
+#        run: docker push $IMAGE_NAME
 
       # deploy image
       - name: Deploy Docker image
