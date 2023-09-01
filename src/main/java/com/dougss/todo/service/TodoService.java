@@ -30,7 +30,7 @@ public class TodoService {
             todo = getTodoById(todoDTO.getId());
         }
 
-        todo.setDescription(todoDTO.getDescription() + "DEBUG");
+        todo.setDescription(todoDTO.getDescription());
         todo.setDone(todoDTO.getDone());
         todo.setUser(user);
 
