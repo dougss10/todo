@@ -1,106 +1,129 @@
-name: Todo CI/CD
-
+name: Conviso Security Test Suite
 on:
   push:
-    branches: [ "main" ]
-  pull_request:
-    branches: [ "main" ]
+    branches: ["main"]
+  workflow_dispatch:
 
 jobs:
-  # conviso-diff:
-  #    runs-on: ubuntu-latest
-  #    container:
-  #      image: convisoappsec/convisocli
-  #      env:
-  #        FLOW_API_KEY:  ${{secrets.CONVISO_API_KEY}}
-  #        FLOW_PROJECT_CODE: "<project code>"
-  #    steps:
-  #     - uses: actions/checkout@v3
-  
-  #     - name: codereview
-  #       #Please use only one of the following approaches in the same job
-  
-  #       #Using Tags, ordered by time
-  #       run: conviso deploy create with tag-tracker sort-by time
-  #       #Using Tags, ordered by versioning style (semantic version)
-  #       # run: conviso deploy create with tag-tracker sort-by versioning-style
-  #       #Without using Tags, ordered by Git tree
-  #       # run: conviso deploy create with values 
-        
-  conviso-sca:
-   runs-on: ubuntu-latest
-   container:
-     image: convisoappsec/convisocli
-     env:
-       FLOW_API_KEY:  ${{secrets.CONVISO_API_KEY}}
-       FLOW_PROJECT_CODE: "jd6lgIFwVW1LFNZo"
-   steps:
-   - uses: actions/checkout@v3
-   - name: Run SCA
-     run: conviso sca run
-
-  conviso-sast:
-   runs-on: ubuntu-latest
-   container:
-     image: convisoappsec/convisocli
-     env:
-       FLOW_API_KEY:  ${{secrets.CONVISO_API_KEY}}
-       FLOW_PROJECT_CODE: "jd6lgIFwVW1LFNZo"
-   steps:
-   - uses: actions/checkout@v3
-   - name: Run SAST
-     run: conviso sast run
-
-  build:
-
+  conviso-test-suite:
     runs-on: ubuntu-latest
-
-    environment: gcp-prod
+    container:
+      image: convisoappsec/flowcli
+      env:
+        FLOW_API_KEY: ${{secrets.CONVISO_API_KEY}}
+        FLOW_PROJECT_CODE: 'jd6lgIFwVW1LFNZo'
     steps:
-      - uses: actions/checkout@v3
-        env:
-          IMAGE_NAME: dougss10/todo
-      - name: Set up JDK 17
-        uses: actions/setup-java@v3
-        with:
-          java-version: '17'
-          distribution: 'temurin'
-          cache: maven
-      - name: Build with Maven
-        run: mvn -B package --file pom.xml -Dspring.datasource.url=jdbc:postgresql://${{format('{0}',  secrets.DB_HOST)}}/todo -Dspring.datasource.username=${{format('{0}',  secrets.DB_USER )}} -Dspring.datasource.password=${{format('{0}',  secrets.DB_PASS )}} -Dapi.security.token.secret=${{format('{0}',  secrets.JWT_SECRET )}}
+      - name: Checkout code
+        uses: actions/checkout@v3
 
-      - name: Build & push Docket image
-        uses: mr-smithers-excellent/docker-build-push@v5
-        with:
-          image: dougss10/todo
-          tags: latest
-          registry: docker.io
-          dockerfile: Dockerfile
-          buildArgs: JWT_SECRET_ARG=${{format('{0}',  secrets.JWT_SECRET )}},DB_HOST_ARG=${{format('{0}',  secrets.DB_HOST)}},DB_USER_ARG=${{format('{0}',  secrets.DB_USER )}},DB_PASS_ARG=${{format('{0}',  secrets.DB_PASS )}}
-          username: ${{ secrets.DOCKER_HUB_USER }}
-          password: ${{ secrets.DOCKER_HUB_PASS }}
+      - name: Run AST
+        run: conviso ast run
 
-#  deploy:
-#    needs: build
-      - name: Setup Gcloud Account
-      # Login to GCP
-        uses: google-github-actions/setup-gcloud@v0.2.0
-        with:
-          service_account_key: ${{ secrets.GCP_CREDENTIALS }}
-          project_id: ${{ secrets.GCP_PROJECT_ID }}
 
-      # gcloud configure docker
-      - name: Configure Docker
-        run: gcloud auth configure-docker --quiet
 
-      # build image
-      - name: Build Docker image
-        run: docker build --build-arg JWT_SECRET_ARG=${{format('{0}',  secrets.JWT_SECRET )}} --build-arg DB_HOST_ARG=${{format('{0}',  secrets.DB_HOST)}} --build-arg DB_USER_ARG=${{format('{0}',  secrets.DB_USER )}} --build-arg DB_PASS_ARG=${{format('{0}',  secrets.DB_PASS )}} -t dougss10/todo .
+# name: Todo CI/CD
 
-      # push image to registry
-      - name: Push Docker image
-        run: docker push dougss10/todo
+# on:
+#   push:
+#     branches: [ "main" ]
+#   pull_request:
+#     branches: [ "main" ]
 
-      # deploy image
-      - name: Deploy Docker image
-        run: gcloud run deploy site --image ${{format('{0}',  secrets.DOCKER_HUB_USER )}}/todo --region us-central1 --min-instances 0 --max-instances 1 --platform managed --port 8080 --allow-unauthenticated
+# jobs:
+#   # conviso-diff:
+#   #    runs-on: ubuntu-latest
+#   #    container:
+#   #      image: convisoappsec/convisocli
+#   #      env:
+#   #        FLOW_API_KEY:  ${{secrets.CONVISO_API_KEY}}
+#   #        FLOW_PROJECT_CODE: "<project code>"
+#   #    steps:
+#   #     - uses: actions/checkout@v3
+  
+#   #     - name: codereview
+#   #       #Please use only one of the following approaches in the same job
+  
+#   #       #Using Tags, ordered by time
+#   #       run: conviso deploy create with tag-tracker sort-by time
+#   #       #Using Tags, ordered by versioning style (semantic version)
+#   #       # run: conviso deploy create with tag-tracker sort-by versioning-style
+#   #       #Without using Tags, ordered by Git tree
+#   #       # run: conviso deploy create with values 
+        
+#   conviso-sca:
+#    runs-on: ubuntu-latest
+#    container:
+#      image: convisoappsec/convisocli
+#      env:
+#        FLOW_API_KEY:  ${{secrets.CONVISO_API_KEY}}
+#        FLOW_PROJECT_CODE: "jd6lgIFwVW1LFNZo"
+#    steps:
+#    - uses: actions/checkout@v3
+#    - name: Run SCA
+#      run: conviso sca run
+
+#   conviso-sast:
+#    runs-on: ubuntu-latest
+#    container:
+#      image: convisoappsec/convisocli
+#      env:
+#        FLOW_API_KEY:  ${{secrets.CONVISO_API_KEY}}
+#        FLOW_PROJECT_CODE: "jd6lgIFwVW1LFNZo"
+#    steps:
+#    - uses: actions/checkout@v3
+#    - name: Run SAST
+#      run: conviso sast run
+
+#   build:
+
+#     runs-on: ubuntu-latest
+
+#     environment: gcp-prod
+#     steps:
+#       - uses: actions/checkout@v3
+#         env:
+#           IMAGE_NAME: dougss10/todo
+#       - name: Set up JDK 17
+#         uses: actions/setup-java@v3
+#         with:
+#           java-version: '17'
+#           distribution: 'temurin'
+#           cache: maven
+#       - name: Build with Maven
+#         run: mvn -B package --file pom.xml -Dspring.datasource.url=jdbc:postgresql://${{format('{0}',  secrets.DB_HOST)}}/todo -Dspring.datasource.username=${{format('{0}',  secrets.DB_USER )}} -Dspring.datasource.password=${{format('{0}',  secrets.DB_PASS )}} -Dapi.security.token.secret=${{format('{0}',  secrets.JWT_SECRET )}}
+
+#       - name: Build & push Docket image
+#         uses: mr-smithers-excellent/docker-build-push@v5
+#         with:
+#           image: dougss10/todo
+#           tags: latest
+#           registry: docker.io
+#           dockerfile: Dockerfile
+#           buildArgs: JWT_SECRET_ARG=${{format('{0}',  secrets.JWT_SECRET )}},DB_HOST_ARG=${{format('{0}',  secrets.DB_HOST)}},DB_USER_ARG=${{format('{0}',  secrets.DB_USER )}},DB_PASS_ARG=${{format('{0}',  secrets.DB_PASS )}}
+#           username: ${{ secrets.DOCKER_HUB_USER }}
+#           password: ${{ secrets.DOCKER_HUB_PASS }}
+
+# #  deploy:
+# #    needs: build
+#       - name: Setup Gcloud Account
+#       # Login to GCP
+#         uses: google-github-actions/setup-gcloud@v0.2.0
+#         with:
+#           service_account_key: ${{ secrets.GCP_CREDENTIALS }}
+#           project_id: ${{ secrets.GCP_PROJECT_ID }}
+
+#       # gcloud configure docker
+#       - name: Configure Docker
+#         run: gcloud auth configure-docker --quiet
+
+#       # build image
+#       - name: Build Docker image
+#         run: docker build --build-arg JWT_SECRET_ARG=${{format('{0}',  secrets.JWT_SECRET )}} --build-arg DB_HOST_ARG=${{format('{0}',  secrets.DB_HOST)}} --build-arg DB_USER_ARG=${{format('{0}',  secrets.DB_USER )}} --build-arg DB_PASS_ARG=${{format('{0}',  secrets.DB_PASS )}} -t dougss10/todo .
+
+#       # push image to registry
+#       - name: Push Docker image
+#         run: docker push dougss10/todo
+
+#       # deploy image
+#       - name: Deploy Docker image
+#         run: gcloud run deploy site --image ${{format('{0}',  secrets.DOCKER_HUB_USER )}}/todo --region us-central1 --min-instances 0 --max-instances 1 --platform managed --port 8080 --allow-unauthenticated
