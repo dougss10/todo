@@ -3,6 +3,7 @@ package com.dougss.todo.controller;
 import com.dougss.todo.dto.LoginResponseDTO;
 import com.dougss.todo.dto.UserInputDTO;
 import com.dougss.todo.dto.UserOutputDTO;
+import com.dougss.todo.exception.RegisterException;
 import com.dougss.todo.model.User;
 import com.dougss.todo.service.TokenService;
 import com.dougss.todo.service.UserService;
@@ -38,11 +39,7 @@ public class AuthenticationController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<UserOutputDTO> register(@RequestBody UserInputDTO userInputDTO) {
-
-        // TODO: 28/08/2023 VALID DUPLICATE USER
-    System.out.println("VALID DUPLICATE USER");
-        
+    public ResponseEntity<UserOutputDTO> register(@RequestBody UserInputDTO userInputDTO) throws RegisterException {
         UserOutputDTO userOutputDTO = userService.createNewUser(userInputDTO);
         return new ResponseEntity<>(userOutputDTO, HttpStatus.CREATED);
     }
