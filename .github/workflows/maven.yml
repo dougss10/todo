@@ -20,4 +20,4 @@ jobs:
         distribution: 'temurin'
         cache: maven
     - name: Build with Maven
-      run: mvn -B package --file pom.xml
+      run: mvn -B package --file pom.xml -Dspring.datasource.url=jdbc:postgresql://${{DB_HOST}}:5432/todo -Dspring.datasource.username=${{DB_USER}} -Dspring.datasource.password=${{DB_PASS}} -Dapi.security.token.secret=${{JWT_SECRET}}
