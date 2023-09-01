@@ -36,6 +36,11 @@ jobs:
           username: ${{ secrets.DOCKER_HUB_USER }}
           password: ${{ secrets.DOCKER_HUB_PASS }}
 
+      - uses: actions/upload-artifact@v3
+        with:
+          name: javaDeploy
+          path: /target/*
+
   deploy:
     needs: build
     name: Setup Gcloud Account
@@ -44,6 +49,9 @@ jobs:
     env:
       IMAGE_NAME: dougss10/todo
     steps:
+      - uses: actions/download-artifact@v3
+        with:
+          name: javaDeploy
       # Git checkout
       - name: Checkout
         uses: actions/checkout@v2
