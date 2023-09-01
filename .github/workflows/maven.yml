@@ -7,25 +7,25 @@ on:
     branches: [ "main" ]
 
 jobs:
-  conviso-diff:
-     runs-on: ubuntu-latest
-     container:
-       image: convisoappsec/convisocli
-       env:
-         FLOW_API_KEY:  ${{secrets.CONVISO_API_KEY}}
-         FLOW_PROJECT_CODE: "<project code>"
-     steps:
-      - uses: actions/checkout@v3
+  # conviso-diff:
+  #    runs-on: ubuntu-latest
+  #    container:
+  #      image: convisoappsec/convisocli
+  #      env:
+  #        FLOW_API_KEY:  ${{secrets.CONVISO_API_KEY}}
+  #        FLOW_PROJECT_CODE: "<project code>"
+  #    steps:
+  #     - uses: actions/checkout@v3
   
-      - name: codereview
-        #Please use only one of the following approaches in the same job
+  #     - name: codereview
+  #       #Please use only one of the following approaches in the same job
   
-        #Using Tags, ordered by time
-        run: conviso deploy create with tag-tracker sort-by time
-        #Using Tags, ordered by versioning style (semantic version)
-        # run: conviso deploy create with tag-tracker sort-by versioning-style
-        #Without using Tags, ordered by Git tree
-        # run: conviso deploy create with values
+  #       #Using Tags, ordered by time
+  #       run: conviso deploy create with tag-tracker sort-by time
+  #       #Using Tags, ordered by versioning style (semantic version)
+  #       # run: conviso deploy create with tag-tracker sort-by versioning-style
+  #       #Without using Tags, ordered by Git tree
+  #       # run: conviso deploy create with values
         
   conviso-sca:
    runs-on: ubuntu-latest
@@ -37,19 +37,19 @@ jobs:
    steps:
    - uses: actions/checkout@v3
    - name: Run SCA
-     run: conviso sca run
+     run: conviso sca run conviso sast run
 
-  conviso-sast:
-   runs-on: ubuntu-latest
-   container:
-     image: convisoappsec/convisocli
-     env:
-       FLOW_API_KEY:  ${{secrets.CONVISO_API_KEY}}
-       FLOW_PROJECT_CODE: "cOzZBcDsO5Lqjy6Y"
-   steps:
-   - uses: actions/checkout@v3
-   - name: Run SAST
-     run: conviso sast run
+  # conviso-sast:
+  #  runs-on: ubuntu-latest
+  #  container:
+  #    image: convisoappsec/convisocli
+  #    env:
+  #      FLOW_API_KEY:  ${{secrets.CONVISO_API_KEY}}
+  #      FLOW_PROJECT_CODE: "cOzZBcDsO5Lqjy6Y"
+  #  steps:
+  #  - uses: actions/checkout@v3
+  #  - name: Run SAST
+  #    run: conviso sast run
 
   build:
 
