@@ -11,13 +11,16 @@ jobs:
 
     runs-on: ubuntu-latest
 
+    environment: gcp-prod
     steps:
-    - uses: actions/checkout@v3
-    - name: Set up JDK 17
-      uses: actions/setup-java@v3
-      with:
-        java-version: '17'
-        distribution: 'temurin'
-        cache: maven
-    - name: Build with Maven
-      run: mvn -B package --file pom.xml -Dspring.datasource.url=jdbc:postgresql://${{DB_HOST}}:5432/todo -Dspring.datasource.username=${{DB_USER}} -Dspring.datasource.password=${{DB_PASS}} -Dapi.security.token.secret=${{JWT_SECRET}}
+      - uses: actions/checkout@v3
+        env:
+          SUPER_SECRET: fasn
+      - name: Set up JDK 17
+        uses: actions/setup-java@v3
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+          cache: maven
+      - name: Build with Maven
+        run: mvn -B package --file pom.xml -Dspring.datasource.url=jdbc:postgresql://${{format('{0}',  secrets.DB_HOST)}}/todo -Dspring.datasource.username=${{format('{0}',  secrets.DB_USER )}} -Dspring.datasource.password=${{format('{0}',  secrets.DB_PASS )}} ${{format('-Dapi.security.token.secret={0}',  secrets.JWT_SECRET )}}
