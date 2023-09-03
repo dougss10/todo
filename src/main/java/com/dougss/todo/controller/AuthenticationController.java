@@ -70,13 +70,13 @@ public class AuthenticationController {
             calendar.add(Calendar.MINUTE, (timeLockAccountMinutes * -1));
             Date dateLock = calendar.getTime();
 
-            if(user != null && !user.isAccountNonLocked() && user.getLockTime().before(dateLock)) {
-                user.setLockTime(null);
-                user.setAccountNonLocked(true);
-                user.setFailedAttempt(0);
-                userService.save(user);
-            } else {
-                if (user != null) {
+            if (user != null) {
+                if(!user.isAccountNonLocked() && user.getLockTime().before(dateLock)) {
+                    user.setLockTime(null);
+                    user.setAccountNonLocked(true);
+                    user.setFailedAttempt(0);
+                    userService.save(user);
+                } else {
                     Calendar calendarTimeLock = Calendar.getInstance();
                     calendarTimeLock.setTime(user.getLockTime());
                     calendarTimeLock.add(Calendar.MINUTE, timeLockAccountMinutes);
