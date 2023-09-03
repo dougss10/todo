@@ -3,6 +3,8 @@ package com.dougss.todo.controller;
 import com.dougss.todo.dto.ErrorMessageDTO;
 import com.dougss.todo.exception.RegisterException;
 import com.dougss.todo.exception.TodoManipulationException;
+import jakarta.validation.ConstraintViolation;
+import jakarta.validation.ConstraintViolationException;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,6 +16,7 @@ import org.springframework.web.context.request.WebRequest;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @ControllerAdvice
@@ -27,6 +30,23 @@ public class ExceptionController  {
                 .getFieldErrors()
                 .stream()
                 .map(DefaultMessageSourceResolvable::getDefaultMessage)
+                .collect(Collectors.toList());
+
+        body.put("errors", errors);
+
+        return new ResponseEntity<>(body, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(ConstraintViolationException.class)
+    public ResponseEntity<Object> TodoManipulationExceptionHandler(ConstraintViolationException exception, WebRequest request) {
+
+        Set<ConstraintViolation<?>> constraintViolations = exception.getConstraintViolations();
+
+        Map<String, List<String>> body = new HashMap<>();
+
+        List<String> errors = constraintViolations.stream()
+                .map(constraintViolation -> String.format("%s value: ('%s'),  %s", constraintViolation.getPropertyPath(),
+                        constraintViolation.getInvalidValue(), constraintViolation.getMessage()))
                 .collect(Collectors.toList());
 
         body.put("errors", errors);
