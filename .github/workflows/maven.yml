@@ -95,16 +95,16 @@ jobs:
       - name: Build with Maven
         run: mvn -B package --file pom.xml -Dspring.datasource.url=jdbc:postgresql://${{format('{0}',  secrets.DB_HOST)}}/todo -Dspring.datasource.username=${{format('{0}',  secrets.DB_USER )}} -Dspring.datasource.password=${{format('{0}',  secrets.DB_PASS )}} -Dapi.security.token.secret=${{format('{0}',  secrets.JWT_SECRET )}}
 
-      # - name: Build & push Docket image
-      #   uses: mr-smithers-excellent/docker-build-push@v5
-      #   with:
-      #     image: dougss10/todo
-      #     tags: latest
-      #     registry: docker.io
-      #     dockerfile: Dockerfile
-      #     buildArgs: JWT_SECRET_ARG=${{format('{0}',  secrets.JWT_SECRET )}},DB_HOST_ARG=${{format('{0}',  secrets.DB_HOST)}},DB_USER_ARG=${{format('{0}',  secrets.DB_USER )}},DB_PASS_ARG=${{format('{0}',  secrets.DB_PASS )}}
-      #     username: ${{ secrets.DOCKER_HUB_USER }}
-      #     password: ${{ secrets.DOCKER_HUB_PASS }}
+      - name: Build & push Docket image
+        uses: mr-smithers-excellent/docker-build-push@v5
+        with:
+          image: dougss10/todo
+          tags: latest
+          registry: docker.io
+          dockerfile: Dockerfile
+          buildArgs: JWT_SECRET_ARG=${{format('{0}',  secrets.JWT_SECRET )}},DB_HOST_ARG=${{format('{0}',  secrets.DB_HOST)}},DB_USER_ARG=${{format('{0}',  secrets.DB_USER )}},DB_PASS_ARG=${{format('{0}',  secrets.DB_PASS )}}
+          username: ${{ secrets.DOCKER_HUB_USER }}
+          password: ${{ secrets.DOCKER_HUB_PASS }}
 
 #  deploy:
 #    needs: build
@@ -129,4 +129,4 @@ jobs:
 
       # deploy image
       - name: Deploy Docker image
-        run: gcloud run deploy site --image ${{format('{0}',  secrets.DOCKER_HUB_USER )}}/todo --region us-central1 --min-instances 0 --max-instances 1 --platform managed --port 8080 --allow-unauthenticated
+        run: gcloud run deploy todo --image ${{format('{0}',  secrets.DOCKER_HUB_USER )}}/todo --region us-central1 --min-instances 0 --max-instances 1 --platform managed --port 8080 --allow-unauthenticated
