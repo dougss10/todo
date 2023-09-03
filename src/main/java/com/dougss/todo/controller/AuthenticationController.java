@@ -39,7 +39,7 @@ public class AuthenticationController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<UserOutputDTO> register(@RequestBody UserInputDTO userInputDTO) throws RegisterException {
+    public ResponseEntity<UserOutputDTO> register(@RequestBody @Valid UserInputDTO userInputDTO) throws RegisterException {
         UserOutputDTO userOutputDTO = userService.createNewUser(userInputDTO);
         return new ResponseEntity<>(userOutputDTO, HttpStatus.CREATED);
     }
