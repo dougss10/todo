@@ -7,6 +7,10 @@ import com.dougss.todo.exception.RegisterException;
 import com.dougss.todo.model.User;
 import com.dougss.todo.service.TokenService;
 import com.dougss.todo.service.UserService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -30,6 +34,14 @@ public class AuthenticationController {
         this.tokenService = tokenService;
     }
 
+
+    @Operation(summary = "Login User", method = "POST")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Login User performed successfully"),
+            @ApiResponse(responseCode = "400", description = "Invalid parameters"),
+            @ApiResponse(responseCode = "403", description = "Access forbidden"),
+            @ApiResponse(responseCode = "500", description = "Internal error"),
+    })
     @PostMapping("/login")
     public ResponseEntity<LoginResponseDTO> login(@RequestBody UserInputDTO userInputDTO) throws Exception {
         UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(userInputDTO.getUsername(), userInputDTO.getPassword());
@@ -38,6 +50,13 @@ public class AuthenticationController {
         return ResponseEntity.ok(new LoginResponseDTO(token));
     }
 
+    @Operation(summary = "Save User", method = "POST")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Save User performed successfully"),
+            @ApiResponse(responseCode = "400", description = "Invalid parameters"),
+            @ApiResponse(responseCode = "403", description = "Access forbidden"),
+            @ApiResponse(responseCode = "500", description = "Internal error"),
+    })
     @PostMapping("/register")
     public ResponseEntity<UserOutputDTO> register(@RequestBody @Valid UserInputDTO userInputDTO) throws RegisterException {
         UserOutputDTO userOutputDTO = userService.createNewUser(userInputDTO);
