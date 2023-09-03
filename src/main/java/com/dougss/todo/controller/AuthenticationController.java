@@ -57,7 +57,7 @@ public class AuthenticationController {
     public ResponseEntity<LoginResponseDTO> login(@RequestBody UserInputDTO userInputDTO) throws Exception {
         UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(userInputDTO.getUsername(), userInputDTO.getPassword());
         Authentication auth;
-        String token = "";
+        String token;
         try {
             auth = this.authenticationManager.authenticate(usernamePasswordAuthenticationToken);
             token = tokenService.generateToken((User) auth.getPrincipal());
@@ -76,12 +76,14 @@ public class AuthenticationController {
                 user.setFailedAttempt(0);
                 userService.save(user);
             } else {
-                Calendar calendarTimeLock = Calendar.getInstance();
-                calendarTimeLock.setTime(user.getLockTime());
-                calendarTimeLock.add(Calendar.MINUTE, timeLockAccountMinutes);
-                Date dateToUnlock = calendarTimeLock.getTime();
-                DateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
-                throw new LockedException("Blocked account, wait until: " + dateFormat.format(dateToUnlock) + " and try again.");
+                if (user != null) {
+                    Calendar calendarTimeLock = Calendar.getInstance();
+                    calendarTimeLock.setTime(user.getLockTime());
+                    calendarTimeLock.add(Calendar.MINUTE, timeLockAccountMinutes);
+                    Date dateToUnlock = calendarTimeLock.getTime();
+                    DateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
+                    throw new LockedException("Blocked account, wait until: " + dateFormat.format(dateToUnlock) + " and try again.");
+                }
             }
             auth = this.authenticationManager.authenticate(usernamePasswordAuthenticationToken);
             token = tokenService.generateToken((User) auth.getPrincipal());
