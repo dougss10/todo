@@ -23,5 +23,6 @@ API de gerenciar tarefas simples.
 
 ## Como acessar
 
-A API poderá ser acessada em [https://todo-wimlzsqaya-uc.a.run.app](https://todo-wimlzsqaya-uc.a.run.app).
+A API poderá ser acessada em [https://todo-wimlzsqaya-uc.a.run.app](https://todo-wimlzsqaya-uc.a.run.app). 
+
 O Swagger poderá ser visualizado em [https://todo-wimlzsqaya-uc.a.run.app/swagger-ui/index.html](https://todo-wimlzsqaya-uc.a.run.app/swagger-ui/index.html)
