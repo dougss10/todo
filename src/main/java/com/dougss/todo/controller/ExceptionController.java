@@ -8,6 +8,8 @@ import jakarta.validation.ConstraintViolationException;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authentication.LockedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -52,6 +54,18 @@ public class ExceptionController  {
         body.put("errors", errors);
 
         return new ResponseEntity<>(body, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(LockedException.class)
+    public ResponseEntity<Object> TodoManipulationExceptionHandler(LockedException exception, WebRequest request) {
+        ErrorMessageDTO errorMessageDTO = new ErrorMessageDTO(exception.getMessage());
+        return new ResponseEntity<>(errorMessageDTO, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(BadCredentialsException.class)
+    public ResponseEntity<Object> TodoManipulationExceptionHandler(BadCredentialsException exception, WebRequest request) {
+        ErrorMessageDTO errorMessageDTO = new ErrorMessageDTO(exception.getMessage());
+        return new ResponseEntity<>(errorMessageDTO, HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(TodoManipulationException.class)

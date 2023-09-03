@@ -9,11 +9,12 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
+import java.util.Date;
 
 @NoArgsConstructor
 @Data
 @Audited
-@Entity(name = "users")
+@Entity()
 @Table(name = "users")
 public class User implements UserDetails {
 
@@ -29,6 +30,9 @@ public class User implements UserDetails {
     @Email(message = "username must be a valid e-mail.")
     private String username;
     private String password;
+    private Boolean accountNonLocked;
+    private Integer failedAttempt;
+    private Date lockTime;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -42,7 +46,7 @@ public class User implements UserDetails {
 
     @Override
     public boolean isAccountNonLocked() {
-        return true;
+        return this.accountNonLocked;
     }
 
     @Override
