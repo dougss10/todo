@@ -45,9 +45,7 @@ jobs:
           distribution: 'temurin'
           cache: maven
       - name: Build with Maven
-        run: mvn test -Dspring.datasource.url=jdbc:postgresql://${{format('{0}',  secrets.DB_HOST)}}/todo -Dspring.datasource.username=${{format('{0}',  secrets.DB_USER )}} -Dspring.datasource.password=${{format('{0}',  secrets.DB_PASS )}} -Dapi.security.token.secret=${{format('{0}',  secrets.JWT_SECRET )}}
-#        run: mvn -B test --file pom.xml -Dspring.datasource.url=jdbc:postgresql://${{format('{0}',  secrets.DB_HOST)}}/todo -Dspring.datasource.username=${{format('{0}',  secrets.DB_USER )}} -Dspring.datasource.password=${{format('{0}',  secrets.DB_PASS )}} -Dapi.security.token.secret=${{format('{0}',  secrets.JWT_SECRET )}}
-
+        run: mvn test
 
   build:
     runs-on: ubuntu-latest
