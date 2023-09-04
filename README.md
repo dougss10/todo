@@ -6,11 +6,11 @@ API de gerenciar tarefas simples.
 
 ## Tecnologias
 
-- [Spring Boot]
-- [Spring Security]
-- [Spring Data JPA]
-- [SpringDoc OpenAPI 3]
-- [Postgres]
+- Spring Boot
+- Spring Security
+- Spring Data JPA
+- SpringDoc OpenAPI 3
+- Postgres
 
 ## Práticas adotadas
 
