@@ -138,7 +138,7 @@ public class TodoControllerTests {
 
         ResponseEntity<TodoDTO> todoDTOResponseEntity = restTemplate.postForEntity("/todo", entity, TodoDTO.class );
 
-        assertEquals(todoDTOResponseEntity.getStatusCode(), HttpStatus.BAD_REQUEST);;
+        assertEquals(todoDTOResponseEntity.getStatusCode(), HttpStatus.BAD_REQUEST);
     }
 
 
