@@ -5,9 +5,7 @@ import com.dougss.todo.dto.UserOutputDTO;
 import com.dougss.todo.exception.RegisterException;
 import com.dougss.todo.model.User;
 import com.dougss.todo.repository.UserRepository;
-import jakarta.persistence.EntityManager;
 import jakarta.transaction.Transactional;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -20,8 +18,6 @@ public class UserService {
     final UserRepository userRepository;
     @Value("${limit.failed.attempts.login}")
     private Integer limitFailedAttemptsLogin;
-    @Autowired
-    EntityManager entityManager;
 
     public UserService(UserRepository userRepository) {
         this.userRepository = userRepository;
