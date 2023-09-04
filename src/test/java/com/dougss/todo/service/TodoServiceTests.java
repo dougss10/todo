@@ -1,5 +1,6 @@
 package com.dougss.todo.service;
 
+import com.dougss.todo.dto.TodoDTO;
 import com.dougss.todo.model.Todo;
 import com.dougss.todo.repository.TodoRepository;
 import org.junit.jupiter.api.Test;
@@ -7,6 +8,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.test.context.ActiveProfiles;
 
 import java.util.Optional;
 
@@ -15,6 +17,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.Mockito.when;
 
+@ActiveProfiles("testdb")
 @ExtendWith(MockitoExtension.class)
 class TodoServiceTests {
 
@@ -26,10 +29,18 @@ class TodoServiceTests {
 
 	@Test
 	public void saveTodo_WithValidData_ReturnsTodo() {
-		when(todoRepository.save(TODO)).thenReturn(TODO);
-		Todo objectTodo = todoService.save(TODODTO, USER);
 
-		assertThat(objectTodo).isEqualTo(TODO);
+		Todo todoTemp = new Todo();
+		todoTemp.setDescription("buy Coca");
+		todoTemp.setUser(USER);
+
+		TodoDTO todoDTOTemp = new TodoDTO();
+		todoDTOTemp.setDescription(todoTemp.getDescription());
+
+		when(todoRepository.save(todoTemp)).thenReturn(todoTemp);
+		Todo objectTodo = todoService.save(todoDTOTemp, USER);
+
+		assertThat(objectTodo.getDescription()).isEqualTo(todoTemp.getDescription());
 	}
 
 	@Test

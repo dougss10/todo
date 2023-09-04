@@ -9,6 +9,11 @@ import lombok.NoArgsConstructor;
 @Data
 public class TodoDTO {
 
+    public TodoDTO(String description, Boolean done) {
+        this.description = description;
+        this.done = done;
+    }
+
     public TodoDTO(Todo todo) {
         this.id = todo.getId();
         this.description = todo.getDescription();

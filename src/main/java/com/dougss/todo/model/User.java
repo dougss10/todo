@@ -46,7 +46,7 @@ public class User implements UserDetails {
 
     @Override
     public boolean isAccountNonLocked() {
-        return this.accountNonLocked;
+        return this.accountNonLocked == null || this.accountNonLocked;
     }
 
     @Override
