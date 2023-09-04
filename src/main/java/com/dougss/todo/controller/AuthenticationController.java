@@ -4,7 +4,9 @@ import com.dougss.todo.dto.LoginResponseDTO;
 import com.dougss.todo.dto.UserInputDTO;
 import com.dougss.todo.dto.UserOutputDTO;
 import com.dougss.todo.exception.RegisterException;
+import com.dougss.todo.model.AccessLog;
 import com.dougss.todo.model.User;
+import com.dougss.todo.service.AccessLogService;
 import com.dougss.todo.service.TokenService;
 import com.dougss.todo.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -38,11 +40,13 @@ public class AuthenticationController {
     final AuthenticationManager authenticationManager;
     final UserService userService;
     final TokenService tokenService;
+    final AccessLogService accessLogService;
 
-    public AuthenticationController(AuthenticationManager authenticationManager, UserService userService, TokenService tokenService) {
+    public AuthenticationController(AuthenticationManager authenticationManager, UserService userService, TokenService tokenService, AccessLogService accessLogService) {
         this.authenticationManager = authenticationManager;
         this.userService = userService;
         this.tokenService = tokenService;
+        this.accessLogService = accessLogService;
     }
 
 
@@ -65,18 +69,20 @@ public class AuthenticationController {
         catch (LockedException ex) {
 
             User user = userService.findByUserName(usernamePasswordAuthenticationToken.getName());
-
-            Calendar calendar = Calendar.getInstance();
-            calendar.add(Calendar.MINUTE, (timeLockAccountMinutes * -1));
-            Date dateLock = calendar.getTime();
-
             if (user != null) {
+                Calendar calendar = Calendar.getInstance();
+                calendar.add(Calendar.MINUTE, (timeLockAccountMinutes * -1));
+                Date dateLock = calendar.getTime();
                 if(!user.isAccountNonLocked() && user.getLockTime().before(dateLock)) {
                     user.setLockTime(null);
                     user.setAccountNonLocked(true);
                     user.setFailedAttempt(0);
                     userService.save(user);
                 } else {
+
+                    AccessLog accessLog = new AccessLog(user.getId(), new Date(), false);
+                    accessLogService.save(accessLog);
+
                     Calendar calendarTimeLock = Calendar.getInstance();
                     calendarTimeLock.setTime(user.getLockTime());
                     calendarTimeLock.add(Calendar.MINUTE, timeLockAccountMinutes);
@@ -88,10 +94,18 @@ public class AuthenticationController {
             auth = this.authenticationManager.authenticate(usernamePasswordAuthenticationToken);
             token = tokenService.generateToken((User) auth.getPrincipal());
         } catch (BadCredentialsException ex) {
-            userService.updateFailedAttemptLogin(usernamePasswordAuthenticationToken.getName());
+            User user = userService.updateFailedAttemptLogin(usernamePasswordAuthenticationToken.getName());
+
+            if(user != null) {
+                AccessLog accessLog = new AccessLog(user.getId(), new Date(), false);
+                accessLogService.save(accessLog);
+            }
+
             throw new BadCredentialsException("Username does not exist or password is invalid");
         }
-
+        User user = (User) auth.getPrincipal();
+        AccessLog accessLog = new AccessLog(user.getId(), new Date(), true);
+        accessLogService.save(accessLog);
         return ResponseEntity.ok(new LoginResponseDTO(token));
     }
 

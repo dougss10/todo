@@ -47,7 +47,7 @@ public class UserService {
     }
 
     @Transactional(Transactional.TxType.REQUIRES_NEW)
-    public void updateFailedAttemptLogin(String username) {
+    public User updateFailedAttemptLogin(String username) {
         User user = findByUserName(username);
 
         if(user != null && user.isAccountNonLocked()) {
@@ -62,5 +62,7 @@ public class UserService {
             }
             save(user);
         }
+
+        return user;
     }
 }
