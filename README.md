@@ -16,10 +16,12 @@ API de gerenciar tarefas simples.
 
 - API REST
 - Consultas com Spring Data JPA
+- Teste automatizados
 - Injeção de Dependências
 - Tratamento de respostas de erro
 - Geração automática do Swagger com a OpenAPI 3
 - Autenticação StateLess com JWT
+- Continuous integration and Continuous delivery CI/CD
 
 ## Como acessar
 
