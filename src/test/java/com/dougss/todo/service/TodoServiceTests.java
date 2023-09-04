@@ -28,7 +28,7 @@ class TodoServiceTests {
 	private TodoRepository todoRepository;
 
 	@Test
-	public void saveTodo_WithValidData_ReturnsTodo() {
+	public void saveTodoWithValidDataReturnsTodo() {
 
 		Todo todoTemp = new Todo();
 		todoTemp.setDescription("buy Coca");
@@ -44,13 +44,13 @@ class TodoServiceTests {
 	}
 
 	@Test
-	public void saveTodo_WithInvalidData_ThrowsException() {
+	public void saveTodoWithInvalidDataThrowsException() {
 		when(todoRepository.save(INVALID_TODO)).thenThrow(RuntimeException.class);
 		assertThatThrownBy(() -> todoService.save(INVALID_TODODTO, USER)).isInstanceOf(RuntimeException.class);
 	}
 
 	@Test
-	public void getTodo_ByExistingId_ReturnsTodo() {
+	public void getTodoByExistingIdReturnsTodo() {
 		when(todoRepository.findById(1L)).thenReturn(Optional.of(TODO));
 		Todo objectTodo = todoService.getTodoById(1L);
 		assertThat(objectTodo).isNotNull();
@@ -58,7 +58,7 @@ class TodoServiceTests {
 	}
 
 	@Test
-	public void getTodo_ByUnexistingId_ReturnsNull() {
+	public void getTodoByUnexistingIdReturnsNull() {
 		when(todoRepository.findById(1L)).thenReturn(Optional.empty());
 		Todo objectTodo = todoService.getTodoById(1L);
 		assertThat(objectTodo).isNull();
