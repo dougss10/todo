@@ -2,7 +2,7 @@
   TODO List
 </h1>
 
-API de gerenciar tarefas simples.
+API de gerenciamento de tarefas simples.
 
 ## Tecnologias
 
