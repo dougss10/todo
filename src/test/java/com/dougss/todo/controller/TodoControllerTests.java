@@ -193,7 +193,6 @@ public class TodoControllerTests {
         //@BeforeAll not runs in mvn test the code below is to fix this
         getUser();
 
-
         HttpHeaders headers = new HttpHeaders();
         headers.set("Authorization", "Bearer " + token);
         HttpEntity<TodoDTO> entity = new HttpEntity<>(TODODTO, headers);
@@ -209,5 +208,27 @@ public class TodoControllerTests {
         HttpEntity<TodoDTO> entityPut = new HttpEntity<>(INVALID_TODODTO, headers);
         ResponseEntity<Object> todoPutResponseEntity = restTemplate.exchange("/todo/" + todoDTOTempPost.getId(), HttpMethod.PUT, entityPut, Object.class);
         assertEquals(HttpStatus.BAD_REQUEST, todoPutResponseEntity.getStatusCode());
+    }
+
+    @Test
+    void testAccessWithoutLogin() {
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.set("Authorization", "Bearer " + token);
+        HttpEntity<TodoDTO> entity = new HttpEntity<>(TODODTO, headers);
+
+        ResponseEntity<TodoDTO> todoDTOResponseEntityPost = restTemplate.postForEntity("/todo", entity, TodoDTO.class );
+
+        assertEquals(todoDTOResponseEntityPost.getStatusCode(), HttpStatus.CREATED);
+        TodoDTO todoDTOTempPost = todoDTOResponseEntityPost.getBody();
+        assertNotNull(todoDTOTempPost);
+        assertNotNull(todoDTOTempPost.getId());
+        assertEquals(todoDTOTempPost.getDescription(), TODODTO.getDescription());
+
+        ResponseEntity<Object> todoGetResponseEntity = restTemplate.exchange("/todo/" + todoDTOTempPost.getId(), HttpMethod.GET, entity, Object.class);
+        assertEquals(HttpStatus.OK, todoGetResponseEntity.getStatusCode());
+
+        ResponseEntity<Object> todoGeWithoutLoginResponseEntity = restTemplate.getForEntity("/todo/" + todoDTOTempPost.getId(), Object.class);
+        assertEquals(HttpStatus.FORBIDDEN, todoGeWithoutLoginResponseEntity.getStatusCode());
     }
 }
